@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title> Cours SQL-Bibliotheque. partie 1</title>
+</head>
+
+<body>
+
+    <main class="container">
+
+
+        <h1 class="text-center"> Les requêtes MySQL part.3</h1>
+
+        <section class="row">
+
+            <div class=" col-12">
+
+                <h2 class="text-center"> 1-Création de la BDD bibliotheque</h2>
+
+            </div>
+
+            <div class="col-12 col-md-4">
+                <h3 class="tex-center">a) La modélisation</h3>
+                <p> Pour base de connées <em> bibliotheque</em>, nous aurons besoin des tables suivantes :</p>
+
+                <ul>
+
+                    <li>abonne
+                        <ul>
+                            <li> id_abonne </li>
+                            <li>prenom</li>
+                    </li>
+                </ul>
+
+                <li>livre
+                    <ul>
+                        <li>id_livre</li>
+                        <li>auteur</li>
+                        <li>titre</li>
+                    </ul>
+
+                </li>
+
+
+                <li>emprunts
+                    <ul>
+                        <li>id_emprunt</li>
+                        <li>id_livre</li>
+                        <li>id_abonne</li>
+                        <li>date_sortie</li>
+                        <li>date_rendu</li>
+                    </ul>
+                </li>
+                </ul>
+                <p class="alert alert-danger"> Ici , on commence à modéliser notre BDD en réfléchissant aux données qui
+                    vont dedans.</p>
+
+            </div>
+
+            <div class="col-12 col-md-8">
+                <figure> <img src="img/abonne.png" alt="modleisation BDD biblio" class="img-fluid"></figure>
+                <figure> <img src="img/livre.png" alt="modleisation BDD biblio" class="img-fluid"></figure>
+            </div>
+
+
+            <div class="col-12 col-md-6">
+                <figure> <img src="img/emprunt.png" alt="modleisation BDD biblio" class="im-fluid"></figure>
+            </div>
+
+
+            <div class="col-12 col-md-6">
+                <figure> <img src="img/designer.png" alt="modleisation BDD biblio" class="im-fluid"></figure>
+            </div>
+        </section>
+
+
+<section class="row">
+
+<div class="col-12"> 
+<h3 class="tex-center">a) Création de la BDD</h3>
+
+<p> <code>CREATE DATABASE bibliotheque CHARACTER SET 'utf8';</code></p>
+<p>Création de la table 1, clle des abonnés</p>
+<p><code> CREATE TABLE IF NOT EXISTS abonne ( 
+    id_abonne INT(3) NOT NULL AUTO_INCREMENT, 
+    prenom VARCHAR(20) NOT NULL, 
+    PRIMARY KEY (id_abonne)
+
+)ENGINE=innoDB;
+</code></p>
+
+<p>Création de la table2, celle des livres:  <code> CREATE TABLE IF NOT EXISTS livre (id_livre INT(3) NOT NULL AUTO_INCREMENT, auteur VARCHAR(30) NOT NULL, titre VARCHAR(30) NOT NULL, PRIMARY KEY (id_livre))ENGINE=innoDB; </code></p>
+
+<p> Création de la table 3, celle des  emprunts: <code>CREATE TABLE IF NOT EXISTS emprunt (id_emprunt INT(3) NOT NULL AUTO_INCREMENT, id_livre INT(3) DEFAULT NULL, id_abonne INT(3) DEFAULT NULL, date_sortie DATE NOT NULL, date_rendu DATE DEFAULT NULL, PRIMARY KEY (id_emprunt))ENGINE=innoDB;</code></p>
+
+<p> Création des clés étangères : <code>ALTER TABLE emprunt ADD FOREIGN KEY(id_livre)REFERENCES bibliotheque.livre(id_livre);</code></p>
+
+<P> Création des clés étrangères : <code> ALTER TABLE emprunt ADD FOREIGN KEY(id_abonne)REFERENCES bibliotheque.emprunt(id_abonne);</code></P>
+<p> Pour vérifier la construction de nos tables, on peut utiliser le code  <code> DESCRIBE nomtable;</code></p>
+
+<div class="col-12">
+
+<h3 class="text-center"> b) Entrée des données dans la table</h3>
+ <p>Les données de la table abonne : <code> INSERT INTO abonne VALUES (NULL, 'Guillaume'), (NULL, 'Benoit'), (NULL, 'Chloe'), (NULL, 'Laura'); </code></p>  
+
+
+ <P>Les données de la table livre: <code>INSERT INTO livre (id_livre, auteur, titre) VALUES (100, 'GUY DE MAUPASSANT', 'Une vie'), (101, 'GUY DE MAUPASSANT', 'Bel-Ami '), (102, 'HONORE DE BALZAC', 'Le père Goriot'), (103, 'ALPHONSE DAUDET', 'Le Petit chose'), (104, 'ALEXANDRE DUMAS', 'La Reine Margot'), (105, 'ALEXANDRE DUMAS', 'Les Trois Mousquetaires');
+
+</code></P>
+
+<p>Les données de la table emprunt: <code> INSERT INTO emprunt (id_emprunt, id_livre, id_abonne, date_sortie, date_rendu) VALUES (1, 100, 1, '2014-12-17', '2014-12-18'), (2, 101, 2, '2014-12-18', '2014-12-20'), (3, 100, 3, '2014-12-19', '2014-12-22'), (4, 103, 4, '2014-12-19', '2014-12-22'), (5, 104, 1, '2014-12-19', '2014-12-28'), (6, 105, 2, '2015-03-20', '2015-03-26'), (7, 105, 3, '2015-06-13', NULL), (8, 100, 2, '2015-06-15', NULL);</code></p>
+</div>
+</section><!-- fin de la rangées -->
+
+
+<section class="row">
+<div class="col-12">
+
+    <h2 class="tex-center"> SELECT sur les tables</h2>
+
+<ul>
+
+<li>SELECT * FROM abonne ;</li>
+<li>SELECT * FROM livre;</li>
+<li>SELECT * FROM emprunt;</li>
+
+</ul>
+
+<ul>
+
+
+<li class="alert alert-danger">Pour trouver quelque chose qui est NULL (vide), on utilisera le terme <em>IS</em></li>
+
+<li>EXO 1 =>  Sélectionner les id des livres qui n'ont pas encore été rendu. <code>   </code> </li>
+
+<li>EXO2 => Afficher les titres de slivres qui n'ont pas été rendu <code>   SELECT titre FROM livre WHERE id_livre IN (SELECT id_livre FROM emprunt WHERE date_rendu IS NULL);</code> ici le champ id_livre utilisé pour relier la table livre et la table emprunt.</li>
+
+<li class="alert alert-danger">Attention, on utilise le mot clef IN et pas le = car plusieurs résuktats sont renvoyés par notre rquête.</li>
+
+<li>EXO 3 => Cherchez l'id du livre que Chloé a emprunté <code>SELECT id_livre FROM emprunt WHERE id_abonne IN (SELECT id_abonne FROM abonne WHERE prenom ='Chloe') ou <code>SELECT id_livre FROM emprunt WHERE id_abonné=3;</code> </code></li>
+
+<li>EXO 4=> Cherchez le prénom des abonnés ayant emprinté un livre le  '2014-12-19 : <code>SELECT prenom FROM abonne WHERE id_abonne IN (SELECT id_abonne FROM emprunt WHERE date_sortie='2014-12-19');  </code></li>
+
+
+<li>EXO 5=> Affichez la liste des abonnés ayant emprunté un livre de Daudet <code>SELECT prenom FROM abonne WHERE id_abonne IN (SELECT id_abonne FROM emprunt WHERE id_livre IN (SELECT id_livre  FROM livre WHERE auteur ='ALPHONSE DAUDET'));</code>  </li>
+
+<li>EXO 6 => Affichez les titres des livres que GUILAUME a emprunté à la Bibliotheque <code>SELECT titre FROM livre WHERE id_livre IN (SELECT id_livre FROM emprunt WHERE id_abonne IN (SELECT id_abonne FROM abonne WHERE prenom= 'Guillaume'));</code></li>
+</ul>
+<li>EXO 7 =>Affichez les titres des livres que Chloe n'a pas emprunté <code><li>Exo 7 Afficher les titres des livres que Chloe n'a pas emprunté : <code>SELECT titre AS livre_non_emprunte FROM livre WHERE id_livre NOT IN (SELECT id_livre FROM emprunt WHERE id_abonne IN (SELECT id_abonne FROM abonne WHERE prenom='Chloe'));</code></li></code></li>
+
+<li> EXO 8 => Affichez les titres de livres que Chloé n'a pas encore rendu à la bibliothèque  : <code> SELECT titre AS livre_non_rendu FROM livre WHERE id_livre IN (SELECT id_livre FROM emprunt WHERE date_rendu IS NULL AND id_abonne IN (SELECT id_abonne FROM abonne WHERE prenom='Chloe'));
+</code> </code></li>
+
+<li>EXO9 Affichez le nombre de livres que Guillaume a emprunté à la biliothere  <code>mysql> SELECT COUNT(id_livre) FROM emprunt WHERE id_abonne IN (SELECT id_abonne FROM abonne WHERE prenom='guillaume');</code></li>
+</div>
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+    </main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- script Bootstrap -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    -->
+</body>
+
+</html>

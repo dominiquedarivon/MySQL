@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+    <main class="container">
+<h1> Les Jointures en mySQL</h1>
+
+<section class="row">
+
+<div class="col-12">
+
+<h2 class="text-texte"> 1- Jointures </h2>
+
+<h3 class="text-center"> a) Définition</h3>
+
+<p>Les jointures permettent , comme les requêtes imbriquées sur plusieurs tables. Pour cela il faut un champ commun aux tables sur lesquelles on veut chercher une information .l'avantage des jointures est que l'on peut obtenir un résultat final des colonnes ou champs issus de plusieurs tables différentes.</p>
+
+
+<h3 class="text-center"> b) Récapitulatif </h3>
+
+<ul>
+
+<li> <code> SELECT</code> : permet de selectionner la liste des champs que je souhaite afficher dans mon résultat de ma requête.</li>
+<li> <code>FROM</code> : j'annonce dans quelle table je cherche l'information.</li>
+<li> <code>WHERE</code> : Condition de jointure pour assurer le croisement des données.</li>
+<li> <code>AND /OR</code>: autres conditions éventuelles </li>
+</ul>
+
+<h3 class="text-center">c) Exemples</h3>
+
+
+<ul>
+
+<li>Dans la BDD bibliotheque, on va afficher les dates auxquelles guillaume s'est rendu à la bibliotheque pour emprunter ou rendre des livres, on a besoin de trois colonnes : prenom, date_sortie et date_rendu <code> SELECT abonne.prenom, emprunt.date_rendu, emprunt.date_sortie FROM abonne, emprunt WHERE abonne.id_abonne=emprunt.id_abonne AND abonne.prenom='guillaume';  </code> </li>
+
+<li>La même requête avec des préfixes: <code>SELECT a.prenom, e.date_sortie, e.date_rendu FROM abonne a, emprunt e WHERE a.id_abonne=e.id_abonne AND a.prenom="Guillaume"; </code>  </li>
+
+<li>EXO 1 => Trouver qui a emprunté <em>Une vie </em> en 2014: <code>SELECT a.prenom FROM abonne a, emprunt e , livre l WHERE l.id_livre=e.id_livre AND e.id_abonne=a.id_abonne AND l.titre = 'Une Vie' AND e.date_sortie LIKE '2014%'; </code>  la même chose en requête imbriquée: <code> SELECT prenom FROM abonne WHERE id_abonne IN (SELECT id_abonne FROM emprunt WHERE date_sortie LIKE '2014%' AND id_livre IN (SELECT id_livre FROM livre WHERE titre='Une vie'));</code></li>
+<li>Affichez le nombre de livre emprunter par chaque abonne <code> SELECT a.prenom, COUNT(e.id_livre) AS 'nombre de livres empruntés'FROM abonne a, emprunt e WHERE a.id_abonne=e.id_abonne GROUP BY e.id_abonne;</code></li>
+<li>EXO 3 qui a emprunté quoi et quand ?( indice : qui  = prenom, quoi = titre et quand = date_sortie :</li>
+ <code> SELECT a.prenom, l.titre, e.date_sortie FROM abonne a, emprunt e, livre l WHERE a.id_abonne = e.id_abonne AND l.id_livre = e.id_livre ORDER BY prenom ASC;</code>
+
+ <li> EXO 4 Ajoute un abonne qui s'appelle ALEX : <code> INSERT INTO abonne (id_abonne, prenom) VALUES (NULL,'Alex');</code> ou <code>INSERT INTO abonne VALUES (NULL, 'Eloise');</code></li>
+</ul>
+
+<li>EXO 5 Affichez le prénom des abonnés avec l'id des livres empruntés <code> SELECT a.prenom, e.id_livre FROM abonne a, emprunt e WHERE a.id_abonne=e.id_abonne ORDER BY prenom; </code></li>
+
+</div>
+
+<div class="col-12">
+
+    <h2 class="text-center"> d) Exemples avec jointures externes</h2>
+    <ul>
+
+<li>Grâce à LEFT JOIN ou RIGHT JOIN = nous allons rapatrier les résultats sans correspondance obligatoire . La condition se fait grâce au mot clef ON et non plus WHERE dans le cas d'une requête  de type externe.</li>
+<li> Afficher le prénom des abonnés avec l'id des livres empruntés:  <code> SELECT abonne.prenom, emprunt.id_livre FROM abonne LEFT JOIN emprunt ON abonne.id_abonne =emprunt.id_abonne; </code> <code>  SELECT abonne.prenom, emprunt.id_livre FROM abonne LEFT JOIN emprunt ON abonne.id_abonne =emprunt.id_abonne ORDER BY prenom;</code></li>
+
+</ul>
+
+</div>
+
+</section>
+
+
+
+
+
+
+        
+
+</main>
+
+
+
+
+
+</body>
+</html>
